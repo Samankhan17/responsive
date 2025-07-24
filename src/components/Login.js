@@ -86,28 +86,6 @@ const[error,setError]=React.useState();
     
 
 
-  const validateInputs =(e) => {
-
-    let isValid = true;
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage('');
-    }
-
-    if (!password.value || password.value.length < 6) {
-      setPasswordError(true);
-      setPasswordErrorMessage('Password must be at least 6 characters long.');
-      isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage('');  
-    }
-
-      return isValid;
-  };
 
 
 const submit = (e) => {
@@ -116,15 +94,19 @@ const submit = (e) => {
       setError('Please fill in All fields.');
       return;
     }
-    if (email === '123' && password === '123'){
-           
-      navigate('/dashboard')
-        setError('');
-    } else {
-      setError('Invalid email or password.');
-       }
-
-      
+    if (email === '123' && password === '123' ){
+          if (capsuccess) {
+            navigate('/dashboard')
+             setError('');
+             setCaperror('');
+             }
+           else {
+           setCaperror('Please Select Iam Not robot');
+                 }
+                }
+            else{
+              setError('Invalid email or password.');
+            }
   };
 
  useEffect(() => {
@@ -133,14 +115,12 @@ const submit = (e) => {
 
 
  
-const[capsuccess,setCapsuccess]=React.useState('false');
+const[capsuccess,setCapsuccess]=React.useState(null);
 
 const onSuccess=(value)=>{
   console.log(value);
-    setCapsuccess(true);
-  
-  
-}
+      setCapsuccess(value);
+  }  
 
 const styles={
      toggleButton: {
@@ -161,14 +141,15 @@ const styles={
 }
 
   return (
-    <div className='App'>
+    <div >
     <SignUpContainer>
         <Card variant="outlined">
           <Typography
             component="h1"
             variant="h4"
             sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
-            color='Aqua'
+            color='#2b5eccff'
+            justifyContent="center"
           >
             Login
           </Typography>
@@ -230,14 +211,17 @@ const styles={
             />
             <div>
           
-          <ReCAPTCHA sitekey='6LfggI0rAAAAAHuEtW7gB7M4dMFwDgkU_hvkqoov' onSuccess={onSuccess}/>
-        
+          <ReCAPTCHA sitekey='6LfggI0rAAAAAHuEtW7gB7M4dMFwDgkU_hvkqoov' onChange={onSuccess}/>
         </div>
+            <span>
+                 <p style={styles.error}>{caperror}</p>
+                 </span>
             <Button
               type="submit"
               fullWidth
               variant="contained"
                   onClick={submit}
+                  
             >
               Sign up
             </Button>
