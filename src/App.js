@@ -5,6 +5,7 @@ import Login from './components/Login';
 import Dashboard from './components/Dasbord';
 function App() {
   return (
+   
          <BrowserRouter>
               <Routes>
         <Route path="/" element={<Login />} />

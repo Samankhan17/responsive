@@ -15,11 +15,14 @@ import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+// import {googleIcon,FacebookIcon} from' @mui/material/Icon';
 // import AppTheme from './theme/AppTheme';
 // import ColorModeSelect from './theme/ColorModeSelect';
 // import { GoogleIcon, FacebookIcon, SitemarkIcon } from './components/CustomIcons';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useState } from 'react';
+import ReCAPTCHA from 'react-google-recaptcha';
+import Icon from '@mui/material/Icon';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -75,24 +78,13 @@ export default function Login() {
   const[email,setEmail]=React.useState();
   const[password,setPassword]=React.useState();
 const[error,setError]=React.useState();
-const[capInput,setCapInput]=React.useState();
-const [capquestion,setCapquestion]=React.useState();
-  const[capAnswer,setCapAnswer]=React.useState();
 
+  
   const[caperror,setCaperror]=React.useState();
   const navigate = useNavigate();
-//   const submit=(e)=>{
-//     e.preventDefault();
-//     if(email || password){
-//         alert('Please fill all the fields');
-//     }
-//     if(email=== 'my@mail.com' && password==='my123'){
-//         alert('Login succesfull');
-//     }else{
-//         alert('Inccorect Email or password');
-//     }
 
-//   }
+    
+
 
   const validateInputs =(e) => {
 
@@ -117,52 +109,45 @@ const [capquestion,setCapquestion]=React.useState();
       return isValid;
   };
 
-//   const handleSubmit = () => {
-//     if (nameError || emailError || passwordError) {
-//       event.preventDefault();
-//       return;
-//     }
-//     const data = new FormData(event.currentTarget);
-//     console.log({
-     
-//       email: data.get('email'),
-//       password: data.get('password'),
-//     });
-//   };
+
 const submit = (e) => {
     e.preventDefault();
-
     if (!email || !password) {
       setError('Please fill in All fields.');
       return;
     }
-    if (email === '123' && password === '123'  ) {
+    if (email === '123' && password === '123'){
+           
       navigate('/dashboard')
-   
-      setError('');
+        setError('');
     } else {
       setError('Invalid email or password.');
-    }
+       }
+
+      
   };
-const generateCap = () => {
-  const num1 = Math.floor(Math.random() * 10);
-  const num2 = Math.floor(Math.random() * 10);
-  const question = `${num1} + ${num2}`;
-  const answer = (num1 + num2).toString();
-  setCapquestion(question);
-  setCapAnswer(answer);
-  setCapInput('');
-};
+
  useEffect(() => {
-    generateCap();
+    
   }, []);
+
+
+ 
+const[capsuccess,setCapsuccess]=React.useState('false');
+
+const onSuccess=(value)=>{
+  console.log(value);
+    setCapsuccess(true);
+  
+  
+}
+
 const styles={
      toggleButton: {
     position: 'absolute',
     right: '10px',
     top: '65%',
-   
-    background: 'none',
+     background: 'none',
     border: 'none',
     cursor: 'pointer',
     fontSize: '0.85rem',
@@ -176,15 +161,16 @@ const styles={
 }
 
   return (
+    <div className='App'>
     <SignUpContainer>
         <Card variant="outlined">
           <Typography
             component="h1"
             variant="h4"
             sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
-            color=''
+            color='Aqua'
           >
-            Sign up
+            Login
           </Typography>
           <Box
             component="form"
@@ -223,7 +209,6 @@ const styles={
                 error={passwordError}
                 helperText={passwordErrorMessage}
                 color={passwordError ? 'error' : 'primary'}
-                // onChange={(e) => setPassword(e.target.value)}
                  type={spassword ? 'text' : 'password'}
               />
               
@@ -244,24 +229,15 @@ const styles={
               label="I want to receive updates via email."
             />
             <div>
-          <label style={{ display: 'block', marginBottom: '0.25rem' }}>
-            Solve: {capquestion}
-          </label>
-          <input
-            type="text"
-            placeholder="Answer"
-            value={capInput}
-            onChange={(e) => setCapInput(e.target.value)}
-            style={{ marginBottom: '1rem' }}
-          />
-          {/* <button onClick={Ref}>Refresh</button> */}
+          
+          <ReCAPTCHA sitekey='6LfggI0rAAAAAHuEtW7gB7M4dMFwDgkU_hvkqoov' onSuccess={onSuccess}/>
+        
         </div>
             <Button
               type="submit"
               fullWidth
               variant="contained"
-            //   onClick={validateInputs}
-            onClick={submit}
+                  onClick={submit}
             >
               Sign up
             </Button>
@@ -270,22 +246,7 @@ const styles={
             <Typography sx={{ color: 'text.secondary' }}>or</Typography>
           </Divider>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            {/* <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => alert('Sign up with Google')}
-              startIcon={<GoogleIcon />}
-            >
-              Sign up with Google
-            </Button>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => alert('Sign up with Facebook')}
-              startIcon={<FacebookIcon />}
-            >
-              Sign up with Facebook
-            </Button> */}
+            
             <Typography sx={{ textAlign: 'center' }}>
               Forot Password?{' '}
               <Link
@@ -299,5 +260,6 @@ const styles={
           </Box>
         </Card>
     </SignUpContainer>
+    </div>
   );
 }
